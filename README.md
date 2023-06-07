@@ -4,4 +4,4 @@
 
 IP: 51.250.75.28
 
-Backend: https://api.logos.nomoredomains.rocks/
+Backend: https://api.saul.nomoredomains.rocks/
