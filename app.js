@@ -22,10 +22,10 @@ const app = express();
 
 app.use(cors({
   origin: [
-    'http://logos.nomoredomains.rocks',
-    'https://logos.nomoredomains.rocks',
-    'http://api.logos.nomoredomains.rocks',
-    'https://api.logos.nomoredomains.rocks',
+    'http://saul.nomoredomains.rocks',
+    'https://saul.nomoredomains.rocks',
+    'http://api.saul.nomoredomains.rocks',
+    'https://api.saul.nomoredomains.rocks',
     'http://localhost:3000',
   ],
   allowedHeaders: ['Content-Type', 'Authorization'],
