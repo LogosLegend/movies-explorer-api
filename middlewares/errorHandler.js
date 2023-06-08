@@ -1,3 +1,9 @@
+const {
+
+  messageCode500,
+
+} = require('../utils/constants');
+
 module.exports.errorHandler = (err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
@@ -6,7 +12,7 @@ module.exports.errorHandler = (err, req, res, next) => {
     .send({
 
       message: statusCode === 500
-        ? 'На сервере произошла ошибка'
+        ? messageCode500
         : message,
     });
   next();

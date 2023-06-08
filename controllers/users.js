@@ -10,9 +10,11 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 const {
 
-  errorCodeMessage400,
-  errorCodeUserMessage404,
-  errorCodeMessage409,
+  signInMessageCode200,
+  signOutMessageCode200,
+  messageCode400,
+  userMessageCode404,
+  messageCode409,
 
 } = require('../utils/constants');
 
@@ -33,11 +35,11 @@ module.exports.updateUserInfo = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequest(errorCodeMessage400));
+        next(new BadRequest(messageCode400));
       } else if (err.name === 'CastError') {
-        next(new NotFoundError(errorCodeUserMessage404));
+        next(new NotFoundError(userMessageCode404));
       } else if (err.code === 11000) {
-        next(new Conflict(errorCodeMessage409));
+        next(new Conflict(messageCode409));
       } else {
         next(err);
       }
@@ -56,9 +58,9 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequest(errorCodeMessage400));
+        next(new BadRequest(messageCode400));
       } else if (err.code === 11000) {
-        next(new Conflict(errorCodeMessage409));
+        next(new Conflict(messageCode409));
       } else {
         next(err);
       }
@@ -75,15 +77,15 @@ module.exports.login = (req, res, next) => {
       res.cookie('jwt', token, {
         httpOnly: true,
         maxAge: 3600000 * 24 * 7,
-      }).send({ message: 'Вход выполнен', token });
+      }).send({ message: signInMessageCode200, token });
     })
     .catch(next);
 };
 
-module.exports.exit = (req, res) => {
+module.exports.signout = (req, res) => {
   res.clearCookie('jwt', {
     sameSite: 'none',
     secure: true,
   })
-    .send({ message: 'Выход выполнен' });
+    .send({ message: signOutMessageCode200 });
 };

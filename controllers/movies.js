@@ -6,9 +6,10 @@ const NotFoundError = require('../errors/NotFoundError');
 
 const {
 
-  errorCodeMessage400,
-  errorCodeMessage403,
-  errorCodeMovieMessage404,
+  deleteMessageCode200,
+  messageCode400,
+  messageCode403,
+  movieMessageCode404,
 
 } = require('../utils/constants');
 
@@ -50,7 +51,7 @@ module.exports.createMovie = (req, res, next) => {
     .then((movie) => res.send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequest(errorCodeMessage400));
+        next(new BadRequest(messageCode400));
       } else {
         next(err);
       }
@@ -65,18 +66,18 @@ module.exports.deleteMovie = (req, res, next) => {
       if (movie) {
         if (req.user._id === movie.owner._id.toString()) {
           Movie.findByIdAndRemove(filmId)
-            .then(() => res.send({ message: 'Удаление выполнено' }))
+            .then(() => res.send({ message: deleteMessageCode200 }))
             .catch(next);
         } else {
-          next(new Forbidden(errorCodeMessage403));
+          next(new Forbidden(messageCode403));
         }
       } else {
-        next(new NotFoundError(errorCodeMovieMessage404));
+        next(new NotFoundError(movieMessageCode404));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequest(errorCodeMessage400));
+        next(new BadRequest(messageCode400));
       } else {
         next(err);
       }

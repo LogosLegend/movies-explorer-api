@@ -6,18 +6,18 @@ const cookieParser = require('cookie-parser');
 const { errors, celebrate, Joi } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
-const { login, createUser, exit } = require('./controllers/users');
+const { login, createUser, signout } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/errorHandler');
 const limiter = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const NotFoundError = require('./errors/NotFoundError');
 
-const { errorCodeUrlMessage404 } = require('./utils/constants');
+const { urlMessageCode404, devDataBase } = require('./utils/constants');
 
 const auth = require('./middlewares/auth');
 
-const { PORT = 3000, DATABASE = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
+const { PORT = 3000, DATABASE = devDataBase } = process.env;
 const app = express();
 
 app.use(cors({
@@ -54,7 +54,7 @@ app.post('/signin', celebrate({
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -62,12 +62,12 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-app.get('/exit', exit);
+app.get('/signout', signout);
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/movies'));
 
-app.use('*', (req, res, next) => next(new NotFoundError(errorCodeUrlMessage404)));
+app.use('*', (req, res, next) => next(new NotFoundError(urlMessageCode404)));
 
 app.use(errorLogger);
 
